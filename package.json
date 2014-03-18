@@ -1,0 +1,29 @@
+{
+	"name": "jakmar",
+	"version": "0.0.1",
+	"description": "Jakmar is a finite state machine.",
+	"main": "jakmar.js",
+	"author": "Fabien Deshayes",
+	"license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/FabienDeshayes/jakmar.git"
+  },
+  "scripts": {
+    "test": "istanbul test _mocha --report html -- -R spec"
+  },
+	"devDependencies": {
+    "istanbul": "~0.2.4",
+    "mocha": "~1.17.1",
+    "chai": "~1.9.0",
+    "coveralls": "~2.8.0",
+    "mocha-lcov-reporter": "0.0.1",
+    "sinon": "~1.9.0",
+    "mocha-sinon": "~1.1.0",
+    "sinon-chai": "~2.5.0"
+  },
+  "bugs": {
+    "url": "https://github.com/FabienDeshayes/jakmar/issues"
+  },
+  "homepage": "https://github.com/FabienDeshayes/jakmar"
+}
