@@ -1,10 +1,12 @@
 # Jakmar.js
 
-Jakmar is a finite state machine.
+Jakmar is a finite state machine for Javascript.
 
 ## TODO
 
-* Stuff
+* Reach 100% code coverage
+* Implement "enter" and "exit" state change methods
+* Handle advanced options
 
 ## Status
 
