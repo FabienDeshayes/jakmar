@@ -108,7 +108,7 @@
 
 	// Jakmar
 
-	var jakmar = function() {}
+	var jakmar = {}
 
 	function _create(id) {
 		return new MachineDefinition(id)
