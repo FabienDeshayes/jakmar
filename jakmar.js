@@ -25,6 +25,8 @@
 	function MachineDefinition(id) {
 		var states = {}
 			, transitions = []
+			, enterFn = function noop() {}
+			, exitFn = function noop() {}
 		
 		this.id = id
 
@@ -36,7 +38,9 @@
 					if (this.state === transition.fromState.id) {
 						// fromState correct for transition, move to toState
 						this.state = transition.toState.id
+						exitFn(transition.fromState.id)
 						this.stateChange(transition.id, transition.fromState.id, transition.toState.id)
+						enterFn(transition.toState.id)
 					} else {
 						// fromState incorrect, throw an error
 						throw new Error('Cannot apply transition \'' + transition.id + '\', current state is not \'' + transition.fromState.id + '\'.')
@@ -84,6 +88,18 @@
 				fromState: states[fromStateId],
 				toState: states[toStateId]
 			}))
+
+			return this
+		}
+
+		this.onEnter = function(onEnterFn) {
+			enterFn = onEnterFn
+
+			return this
+		}
+
+		this.onExit = function(onExitfn) {
+			exitFn = onExitfn
 
 			return this
 		}

@@ -4,8 +4,9 @@ Jakmar is a finite state machine for Javascript.
 
 ## TODO
 
-* Reach 100% code coverage
-* Implement "enter" and "exit" state change methods
+* How to unit test the UMD wrapper for coverage?
+* Document the API
+* Improve the README
 * Handle advanced options
 
 ## Status

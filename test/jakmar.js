@@ -1,4 +1,5 @@
 var expect = require('chai').expect
+  , sinon = require('sinon')
   , jakmar = require('../jakmar')
 
 describe('Jakmar', function() {
@@ -107,5 +108,38 @@ describe('Jakmar', function() {
 			expect(machineDefinition.getTransitions()[0].id).to.equal('connect')
 			expect(machineDefinition.getTransitions()[1].id).to.equal('disconnect')
 		})
+
+		it('should register an onEnter function', function() {
+      var spy = sinon.spy()
+
+			var status = jakmar
+				.create()
+				.states('online', 'offline')
+				.transition('connect', 'offline', 'online')
+				.transition('disconnect', 'online', 'offline')
+				.onEnter(spy)
+				.build('offline', {})
+
+      expect(spy.called).to.equal.false
+      status.connect()
+      expect(spy.called).to.equal.true
+		})
+
+		it('should register an onExit function', function() {
+      var spy = sinon.spy()
+
+			var status = jakmar
+				.create()
+				.states('online', 'offline')
+				.transition('connect', 'offline', 'online')
+				.transition('disconnect', 'online', 'offline')
+				.onExit(spy)
+				.build('offline', {})
+
+      expect(spy.called).to.equal.false
+      status.connect()
+      expect(spy.called).to.equal.true
+		})
+		
 	})
 })
