@@ -1,0 +1,6 @@
+coverage/
+examples/
+node_modules/
+tests/
+.jshintrc
+.travis.yml
