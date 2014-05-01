@@ -1,4 +1,6 @@
 (function (root, factory) {
+	/* istanbul ignore next */
+	// Ignore the UMD wrapper for coverage
 	// UMD wrap - return exports style: https://github.com/umdjs/umd/blob/master/returnExports.js
 	if (typeof define === 'function' && define.amd) {
 		define(factory)
