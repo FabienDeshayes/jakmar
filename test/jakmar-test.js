@@ -1,6 +1,10 @@
-var expect = require('chai').expect
-  , sinon = require('sinon')
-  , jakmar = require('../jakmar')
+if (typeof require !== 'undefined') {
+	var expect = require('chai').expect
+	  , sinon = require('sinon')
+	  , jakmar = require('../jakmar')
+} else {
+	var expect = chai.expect
+}
 
 describe('Jakmar', function() {
 
