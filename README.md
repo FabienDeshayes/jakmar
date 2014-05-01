@@ -67,7 +67,6 @@ console.log(article.state) // archived
 
 ## TODO
 
-* Document the API
 * Handle advanced options
 
 ## Status
