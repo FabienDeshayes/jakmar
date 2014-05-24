@@ -5,9 +5,9 @@
   "main": "jakmar.js",
   "ignore": [
     "coverage",
-    "example",
+    "examples",
     "test",
-    ".gitgnore",
+    ".gitignore",
     ".jshintrc",
     ".npmignore",
     ".travis.yml",
