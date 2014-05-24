@@ -1,0 +1,20 @@
+{
+  "name": "jakmar",
+  "version": "0.0.2",
+  "description": "Jakmar is a finite state machine.",
+  "main": "jakmar.js",
+  "ignore": [
+    "coverage",
+    "example",
+    "test",
+    ".gitgnore",
+    ".jshintrc",
+    ".npmignore",
+    ".travis.yml",
+    "bower.json",
+    "CHANGELOG.md",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ]
+}

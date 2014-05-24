@@ -68,6 +68,7 @@ console.log(article.state) // archived
 ## TODO
 
 * Handle advanced options
+* Publish to Bower
 
 ## Status
 
