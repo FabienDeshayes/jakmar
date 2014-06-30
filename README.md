@@ -67,7 +67,10 @@ console.log(article.state) // archived
 
 ## TODO
 
+* Provide a simple example with React
+* Provide a simple example with Vue
 * Handle advanced options
+* Improve documentation in README at first
 * Publish to Bower
 
 ## Status
