@@ -1,6 +1,6 @@
 {
   "name": "jakmar",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Jakmar is a finite state machine.",
   "main": "jakmar.js",
   "author": "Fabien Deshayes",
