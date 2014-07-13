@@ -53,12 +53,13 @@ console.log(stateful.state) // opened
 
 # API
 
-### jakmar.create(id)
+### jakmar.create(id, options)
 
-The ```create``` method creates and returns a new instance of a ```MachineDefinition``` with ```id``` as an identifier.
+The ```create``` method creates and returns a new instance of a ```MachineDefinition``` with ```id``` as an identifier. The following ```options``` are valid (and all are optional):
+* ```errorOnInvalidTransition```: will throw an Error if a transition tries to be applied but the stateful object is not in an expected state. Default is ```true```.
 
 ```javascript
-machineDefinition = jakmar.create()
+machineDefinition = jakmar.create('fooDef', {errorOnInvalidTransition: false})
 ```
 
 ### machineDefinition.state(stateId)
@@ -128,7 +129,7 @@ console.log(transitions)
 // ]
 ```
 
-### machineDefinition.onEnter()
+### machineDefinition.onEnter(onEnterFn)
 
 Register a function that will be called every time the ```statefulObject``` enter a new state. It is called after the ```onExitFn```, once the new state has been applied. The ```onEnterFn``` should be a function accepting one argument, being the ```id``` of state that has just been entered. Returns ```this``` for chained calls.
 
@@ -142,7 +143,7 @@ statefulObject.close()
 // Entering closed
 ```
 
-### machineDefinition.onExit()
+### machineDefinition.onExit(onExitFn)
 
 Register a function that will be called every time the ```statefulObject``` exits a state. It is called before the ```onEnterFn```, once the new state has been applied. The ```onExitFn``` should be a function accepting one argument, being the ```id``` of state that will be exited. Returns ```this``` for chained calls.
 
@@ -178,12 +179,20 @@ statefulObject.open()
 // Going from opened to closed because of transition open
 ```
 
+### statefulObject.<transition>
+
+Apply a registered ```transition``` to the ```statefulObject```. Returns ```true``` id the transitions was applied, throws an ```Error``` if the transition can't be applied (because the ```statefulObject``` is not in a state where the ```transition``` can be applied) or returns ```false``` if the ```errorOnInvalidTransition``` option is set to false.
+
+```javascript
+statefulOject.state // closed
+statefulObject.open() // returns true
+statefulOject.state // opened
+statefulObject.open() // throws an Error
+```
+
 ## TODO
 
-* Silent errors option when applying transitions
-* Silent errors option when registering transitions
-* Error if no initial state or initial state cannot be found
-* Retrieve machine definitions by id
+* Retrieve machine definition by id
 * Provide a simple example with React
 * Provide a simple example with Vue
 

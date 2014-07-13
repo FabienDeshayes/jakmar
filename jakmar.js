@@ -35,17 +35,19 @@
 	}
 
 	// MachineDefinition
-	function MachineDefinition(id) {
+	function MachineDefinition(id, options) {
 		var states = {}
 			, transitions = {}
 			, transitionsArray = []
 			, enterFn = function noop() {}
 			, exitFn = function noop() {}
+			, errorOnInvalidTransition = options.errorOnInvalidTransition
 		
 		this.id = id
 
 		function _mixin(target) {
 			var i = 0
+				,	applied = false
 
 			for ( ; i < transitionsArray.length ; i++) {
 				target[transitionsArray[i].id] = function applyTransition(transition) {
@@ -58,14 +60,17 @@
 						exitFn(fromStateId)
 						this.stateChange(transition.id, fromStateId, toStateId)
 						enterFn(toStateId)
+						aplied = true
 					} else {
-						// fromState incorrect, throw an error
-						throw new Error('Cannot apply transition \'' + transition.id + '\' from state \'' + this.state + '\'.')
+						if (errorOnInvalidTransition) {
+							// fromState incorrect, throw an error
+							throw new Error('Cannot apply transition \'' + transition.id + '\' from state \'' + this.state + '\'.')	
+						}
 					}
 				}.bind(target, transitionsArray[i])
 			}
 
-			return target
+			return applied
 		}
 
 		function _registerStates(states) {
@@ -132,9 +137,13 @@
 		this.build = function(initialState, target) {
 			target = target || {}
 
-			_mixin(target)
-			target.state = initialState
-			target.stateChange = function noop() {}
+			if (states.hasOwnProperty(initialState)) {
+				_mixin(target)
+				target.state = initialState
+				target.stateChange = function noop() {}
+			} else {
+				throw new Error('Cannot build machine defintion with unknown initial state:', initialState)
+			}
 
 			return target
 		}
@@ -151,8 +160,12 @@
 
 	var jakmar = {}
 
-	function _create(id) {
-		return new MachineDefinition(id)
+	var _machineDefOptionsDefaults = {
+		errorOnInvalidTransition: true
+	}
+
+	function _create(id, options) {
+		return new MachineDefinition(id, options || _machineDefOptionsDefaults)
 	}
 
 	jakmar.create = _create

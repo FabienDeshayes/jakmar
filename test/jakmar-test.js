@@ -35,8 +35,32 @@ describe('Jakmar', function() {
 				.transition('disconnect', 'online', 'offline')
 				.build('offline', {})
 
-			expect(status.disconnect).to.throw(Error);
-			expect(status.disconnect).to.throw(/Cannot apply transition/);
+			expect(status.disconnect).to.throw(Error)
+			expect(status.disconnect).to.throw(/Cannot apply transition/)
+		})
+
+		it('should dispatch an error if trying to apply an invalid transition but options.errorOnInvalidTransition is true', function() {
+			var status = jakmar
+				.create('test', { errorOnInvalidTransition: true })
+				.state('online')
+				.state('offline')
+				.transition('connect', 'offline', 'online')
+				.transition('disconnect', 'online', 'offline')
+				.build('offline', {})
+
+			expect(status.disconnect).to.throw(Error)
+		})
+
+		it('should not dispatch an error if trying to apply an invalid transition but options.errorOnInvalidTransition is false', function() {
+			var status = jakmar
+				.create('test', { errorOnInvalidTransition: false })
+				.state('online')
+				.state('offline')
+				.transition('connect', 'offline', 'online')
+				.transition('disconnect', 'online', 'offline')
+				.build('offline', {})
+
+			expect(status.disconnect).not.to.throw(Error)
 		})
 	})
 
@@ -119,7 +143,6 @@ describe('Jakmar', function() {
 				.transition('disconnect', 'online', 'offline')
 
 			var transitions = machineDefinition.getTransitions()
-			console.log(transitions)
 			expect(transitions[0].id).to.equal('connect')
 			expect(transitions[1].id).to.equal('disconnect')
 		})
@@ -187,6 +210,13 @@ describe('Jakmar', function() {
 			expect(status.state).to.equal('offline')
 			status.toggle()
 			expect(status.state).to.equal('online')
+		})
+
+		it('should throw an Error if trying to build a stateful object with an unknown transition', function() {
+			var machineDefinition = jakmar.create()
+
+			expect(machineDefinition.build).to.throw(Error)
+			expect(function() { machineDefinition.build('unknown') }).to.throw(Error)
 		})
 	})
 })
