@@ -14,35 +14,29 @@ var jakmar = require('jakmar')
 First, build a MachineDefinition:
 
 ```javascript
-var articleDefinition = jakmar.create()
+var definition = jakmar.create('foo-def') // foo-def is an identifier
 ```
 
 Once it's created, start by adding states:
 
 ```javascript
-articleDefinition
-	.state('new')
-	.state('draft')
-	.state('inReview')
-	.state('published')
-	.state('archived')
+definition
+	.state('opened')
+	.state('closed')
 ```
 
 And some transitions:
 
 ```javascript
-articleDefinition
-	.transition('save', 'new', 'draft')
-	.transition('review', 'draft', 'inReview')
-	.transition('reject', 'inReview', 'draft')
-	.transition('publish', 'inReview', 'published')
-	.transition('archive', 'published', 'archived')
+definition
+	.transition('open', 'opened', 'closed')
+	.transition('close', 'closed', 'opened')
 ```
 
 Then just build the definition to get your stateful instance:
 
 ```javascript
-var article = articleDefinition.build('new')
+var stateful = definition.build('opened')
 ```
 
 ## Changing state
@@ -50,28 +44,148 @@ var article = articleDefinition.build('new')
 Your stateful instance has been enriched with methods defined by transitions. You can also very the current state using the ```state``` property:
 
 ```javascript
-console.log(article.state) // new
-article.save()
-console.log(article.state) // draft
-article.review()
-console.log(article.state) // inReview
-article.reject()
-console.log(article.state) // draft
-article.review()
-console.log(article.state) // inReview
-article.publish()
-console.log(article.state) // published
-article.archive()
-console.log(article.state) // archived
+console.log(stateful.state) // opened
+stateful.close()
+console.log(stateful.state) // closed
+stateful.open()
+console.log(stateful.state) // opened
+```
+
+# API
+
+### jakmar.create(id)
+
+The ```create``` method creates and returns a new instance of a ```MachineDefinition``` with ```id``` as an identifier.
+
+```javascript
+machineDefinition = jakmar.create()
+```
+
+### machineDefinition.state(stateId)
+
+Register a new state with ```stateId``` as an identifier to the ```machineDefinition```. Returns ```this``` for chained calls.
+
+```javascript
+machineDefinition.state('opened')
+```
+
+### machineDefinition.states(stateIds)
+
+Register an array of new states with ```stateIds``` being an Array of identifier for the ```machineDefinition```. Returns ```this``` for chained calls.
+
+```javascript
+machineDefinition.states(['opened', 'closed'])
+```
+
+### machineDefinition.states(...args)
+
+Alternate way of registering new states, using any number of string, each a ```stateId```for the ```machineDefinition```. Returns ```this``` for chained calls.
+
+```javascript
+machineDefinition.states('opened', 'closed')
+```
+
+### machineDefinition.transition(transitionId, fromStateId, toStateId)
+
+Register a new transition with ```transitionId``` as an identifier to the ```machineDefinition```. The transition will change the move the stateful object from the state defined by ```fromStateId``` to the state defined by ```toStateId```. Returns ```this``` for chained calls.
+
+```javascript
+machineDefinition.transition('open', 'opened', 'closed')
+```
+
+### machineDefinition.build(initialState, target)
+
+Transform the ```target``` into a ```statefulObject``` with the current ```machineDefinition``` states and transitions applied to it. ```target``` is optional ; a new object is created if missing. The stateful object initial state is mandatory and defined by the ```initialState```. Returns a ```statefulObject```.
+
+```javascript
+machineDefinition.transition('open', 'opened', 'closed')
+```
+
+### machineDefinition.getStates()
+
+Expose the registered states of the ```machineDefinition```. Returns an object with key / value pairs, key being the state ids and the value being the ```State``` objects. A ```State``` object only has an ```id``` at the moment.
+
+```javascript
+var states = machineDefinition.getStates()
+console.log(states)
+// {
+//	opened: { id: 'opened' },
+//	closed: { id: 'closed' }
+// }
+```
+
+### machineDefinition.getTransitions()
+
+Expose the registered transitions of the ```machineDefinition```. Returns an Arrat of ```Transition``` objects. A ```Transition``` object has two properties: the transition ```id``` and an ```applicableStates``` object of key / value pairs, where the key is the applicable ```fromState``` and the value is the corresponding ```toState``` for that transition.
+
+```javascript
+machineDefinition.transition('toggle', 'opened', 'closed')
+machineDefinition.transition('toggle', 'closed', 'opened')
+var transitions = machineDefinition.getTransitions()
+console.log(transitions)
+// [
+//	{ id: 'toggle', applicableStates : { opened: 'closed', closed: 'opened' } }
+// ]
+```
+
+### machineDefinition.onEnter()
+
+Register a function that will be called every time the ```statefulObject``` enter a new state. It is called after the ```onExitFn```, once the new state has been applied. The ```onEnterFn``` should be a function accepting one argument, being the ```id``` of state that has just been entered. Returns ```this``` for chained calls.
+
+```javascript
+var onEnter = function(stateId) {
+	console.log('Entering', stateId)
+}
+machineDefinition.onEnterFn(onEnter)
+var statefulObject = machineDefinition.build('opened')
+statefulObject.close()
+// Entering closed
+```
+
+### machineDefinition.onExit()
+
+Register a function that will be called every time the ```statefulObject``` exits a state. It is called before the ```onEnterFn```, once the new state has been applied. The ```onExitFn``` should be a function accepting one argument, being the ```id``` of state that will be exited. Returns ```this``` for chained calls.
+
+```javascript
+var onExit = function(stateId) {
+	console.log('Exiting', stateId)
+}
+machineDefinition.onExitFn(onExit)
+var statefulObject = machineDefinition.build('opened')
+statefulObject.close()
+// Exiting opened
+```
+
+### statefulObject.state
+
+Return the current state id of the ```statefulObject```.
+
+```javascript
+var statefulObject = machineDefinition.build('opened')
+statefulObject.state // 'opened'
+```
+
+### statefulObject.stateChange
+
+Function that gets called every time the ```statefulObject``` changes state. It gets called with three arguments: the ```transition``` id that trigerred the change of state, the ```fromState``` id and the ```toState``` id. It gets called ```after the state has changed.
+
+```javascript
+var statefulObject = machineDefinition.build('opened')
+statefulObject.stateChange = function(transitionId, fromStateId, toStateId) {
+	console.log('Going from', fromStateId, 'to', toStateId, 'because of transition', transitionId)
+}
+statefulObject.open()
+// Going from opened to closed because of transition open
 ```
 
 ## TODO
 
+* Silent errors option when applying transitions
+* Silent errors option when registering transitions
+* Error if no initial state or initial state cannot be found
+* Retrieve machine definitions by id
 * Provide a simple example with React
 * Provide a simple example with Vue
-* Handle advanced options
-* Improve documentation in README at first
-* Publish to Bower
 
 ## Status
 

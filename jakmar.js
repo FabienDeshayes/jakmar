@@ -19,14 +19,26 @@
 	// Transition
 	function Transition(options) {
 		this.id = options.id
-		this.fromState = options.fromState
-		this.toState = options.toState
+		this.applicableStates = {}
+
+		this.addStates = function addStates(fromStateId, toStateId) {
+			this.applicableStates[fromStateId] = toStateId
+		}
+
+		this.isApplicableForState = function isApplicableForState(stateId) {
+			return this.applicableStates.hasOwnProperty(stateId)
+		}
+
+		this.getToState = function getToState(stateId) {
+			return this.applicableStates[stateId]
+		}
 	}
 
 	// MachineDefinition
 	function MachineDefinition(id) {
 		var states = {}
-			, transitions = []
+			, transitions = {}
+			, transitionsArray = []
 			, enterFn = function noop() {}
 			, exitFn = function noop() {}
 		
@@ -35,19 +47,22 @@
 		function _mixin(target) {
 			var i = 0
 
-			for ( ; i < transitions.length ; i++) {
-				target[transitions[i].id] = function transition(transition) {
-					if (this.state === transition.fromState.id) {
+			for ( ; i < transitionsArray.length ; i++) {
+				target[transitionsArray[i].id] = function applyTransition(transition) {
+					if (transition.isApplicableForState(this.state)) {
 						// fromState correct for transition, move to toState
-						this.state = transition.toState.id
-						exitFn(transition.fromState.id)
-						this.stateChange(transition.id, transition.fromState.id, transition.toState.id)
-						enterFn(transition.toState.id)
+						var fromStateId = this.state
+						var toStateId = transition.getToState(fromStateId)
+
+						this.state = toStateId
+						exitFn(fromStateId)
+						this.stateChange(transition.id, fromStateId, toStateId)
+						enterFn(toStateId)
 					} else {
 						// fromState incorrect, throw an error
-						throw new Error('Cannot apply transition \'' + transition.id + '\', current state is not \'' + transition.fromState.id + '\'.')
+						throw new Error('Cannot apply transition \'' + transition.id + '\' from state \'' + this.state + '\'.')
 					}
-				}.bind(target, transitions[i])
+				}.bind(target, transitionsArray[i])
 			}
 
 			return target
@@ -85,11 +100,19 @@
 		}
 
 		this.transition = function(transitionId, fromStateId, toStateId) {
-			transitions.push(new Transition({
-				id: transitionId,
-				fromState: states[fromStateId],
-				toState: states[toStateId]
-			}))
+			var transition
+
+			if (transitions.hasOwnProperty(transitionId)) {
+				transition = transitions[transitionId]
+			} else {
+				transition = new Transition({
+					id: transitionId
+				})
+				transitions[transitionId] = transition
+				transitionsArray.push(transition)
+			}
+
+			transition.addStates(fromStateId, toStateId)
 
 			return this
 		}
@@ -120,7 +143,7 @@
 			return states
 		}
 		this.getTransitions = function() {
-			return transitions
+			return transitionsArray
 		}
 	}
 
