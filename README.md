@@ -179,7 +179,7 @@ statefulObject.open()
 // Going from opened to closed because of transition open
 ```
 
-### statefulObject.<transition>
+### statefulObject.\<transition>
 
 Apply a registered ```transition``` to the ```statefulObject```. Returns ```true``` id the transitions was applied, throws an ```Error``` if the transition can't be applied (because the ```statefulObject``` is not in a state where the ```transition``` can be applied) or returns ```false``` if the ```errorOnInvalidTransition``` option is set to false.
 
