@@ -1,6 +1,6 @@
 {
   "name": "jakmar",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Jakmar is a finite state machine.",
   "main": "jakmar.js",
   "ignore": [
