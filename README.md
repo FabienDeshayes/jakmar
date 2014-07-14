@@ -21,7 +21,7 @@ Once it's created, start by adding states:
 
 ```javascript
 definition
-	.state('opened')
+	.state('opened') // a state is justdefined by a string
 	.state('closed')
 ```
 
@@ -29,19 +29,19 @@ And some transitions:
 
 ```javascript
 definition
-	.transition('open', 'opened', 'closed')
-	.transition('close', 'closed', 'opened')
+	.transition('open', 'opened', 'closed') // open transition, from the opened state to the closed state
+	.transition('close', 'closed', 'opened') // close: closed => opened
 ```
 
 Then just build the definition to get your stateful instance:
 
 ```javascript
-var stateful = definition.build('opened')
+var stateful = definition.build('opened') // opened will be the initial state
 ```
 
 ## Changing state
 
-Your stateful instance has been enriched with methods defined by transitions. You can also very the current state using the ```state``` property:
+Your stateful instance has been enriched with methods defined by transitions. You can also verify the current state using the ```state``` property:
 
 ```javascript
 console.log(stateful.state) // opened
