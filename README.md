@@ -2,6 +2,12 @@
 
 Jakmar is a finite state machine for Javascript.
 
+# Example
+
+If you want to see examples of Jakmar, please see the following:
+
+* [Game of life](https://github.com/FabienDeshayes/react-jakmar-example) with Jakmar and React
+
 # Usage
 
 For Node.js, just include the library:
@@ -193,7 +199,6 @@ statefulObject.open() // throws an Error
 ## TODO
 
 * Retrieve machine definition by id
-* Provide a simple example with React
 * Provide a simple example with Vue
 
 ## Status
