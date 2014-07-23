@@ -62,6 +62,32 @@ describe('Jakmar', function() {
 
 			expect(status.disconnect).not.to.throw(Error)
 		})
+
+		it('should return false if trying to apply an invalid transition but options.errorOnInvalidTransition is false', function() {
+			var status = jakmar
+				.create('test', { errorOnInvalidTransition: false })
+				.state('online')
+				.state('offline')
+				.transition('connect', 'offline', 'online')
+				.transition('disconnect', 'online', 'offline')
+				.build('offline', {})
+
+			var applied = status.disconnect()
+			expect(applied).to.be.false
+		})
+
+		it('should return true if applying a valid transition successfully', function() {
+			var status = jakmar
+				.create('test', { errorOnInvalidTransition: false })
+				.state('online')
+				.state('offline')
+				.transition('connect', 'offline', 'online')
+				.transition('disconnect', 'online', 'offline')
+				.build('offline', {})
+
+			var applied = status.connect()
+			expect(applied).to.be.true
+		})
 	})
 
 	describe('machine definition', function() {
@@ -79,9 +105,8 @@ describe('Jakmar', function() {
 				.state('offline')
 				.transition('connect', 'offline', 'online')
 				.transition('disconnect', 'online', 'offline')
-
 			var statusOne = machineDefinition.build('offline')
-			var statusTwo = machineDefinition.build('online')
+				,	statusTwo = machineDefinition.build('online')
 
 			expect(statusOne.state).to.equal('offline')
 			expect(statusTwo.state).to.equal('online')
@@ -128,8 +153,8 @@ describe('Jakmar', function() {
 				.create()
 				.state('online')
 				.state('offline')
-
 			var states = machineDefinition.getStates()
+
 			expect(states.hasOwnProperty('online')).to.be.true
 			expect(states.hasOwnProperty('offline')).to.be.true
 		})
@@ -141,15 +166,14 @@ describe('Jakmar', function() {
 				.state('offline')
 				.transition('connect', 'offline', 'online')
 				.transition('disconnect', 'online', 'offline')
-
 			var transitions = machineDefinition.getTransitions()
+
 			expect(transitions[0].id).to.equal('connect')
 			expect(transitions[1].id).to.equal('disconnect')
 		})
 
 		it('should register an onEnter function', function() {
       var spy = sinon.spy()
-
 			var status = jakmar
 				.create()
 				.states('online', 'offline')
@@ -165,7 +189,6 @@ describe('Jakmar', function() {
 
 		it('should register an onExit function', function() {
       var spy = sinon.spy()
-
 			var status = jakmar
 				.create()
 				.states('online', 'offline')
@@ -217,6 +240,12 @@ describe('Jakmar', function() {
 
 			expect(machineDefinition.build).to.throw(Error)
 			expect(function() { machineDefinition.build('unknown') }).to.throw(Error)
+		})
+
+		it('should use a new object as target if the build method doesn\'t provide a target object', function() {
+			var machineDefinition = jakmar.create().state('online')
+
+			expect(function() { machineDefinition.build('online') }).not.to.throw(Error)
 		})
 	})
 })

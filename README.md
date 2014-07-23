@@ -105,7 +105,7 @@ machineDefinition.transition('open', 'opened', 'closed')
 Transform the ```target``` into a ```statefulObject``` with the current ```machineDefinition``` states and transitions applied to it. ```target``` is optional ; a new object is created if missing. The stateful object initial state is mandatory and defined by the ```initialState```. Returns a ```statefulObject```.
 
 ```javascript
-machineDefinition.transition('open', 'opened', 'closed')
+var statefulObject = machineDefinition.build('opened', {})
 ```
 
 ### machineDefinition.getStates()
@@ -199,6 +199,7 @@ statefulObject.open() // throws an Error
 ## TODO
 
 * Retrieve machine definition by id
+* Add a minified version
 * Provide a simple example with Vue
 
 ## Status

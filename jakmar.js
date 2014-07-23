@@ -47,10 +47,11 @@
 
 		function _mixin(target) {
 			var i = 0
-				,	applied = false
 
 			for ( ; i < transitionsArray.length ; i++) {
 				target[transitionsArray[i].id] = function applyTransition(transition) {
+					var applied = false
+
 					if (transition.isApplicableForState(this.state)) {
 						// fromState correct for transition, move to toState
 						var fromStateId = this.state
@@ -60,17 +61,16 @@
 						exitFn(fromStateId)
 						this.stateChange(transition.id, fromStateId, toStateId)
 						enterFn(toStateId)
-						aplied = true
+						applied = true
 					} else {
 						if (errorOnInvalidTransition) {
 							// fromState incorrect, throw an error
 							throw new Error('Cannot apply transition \'' + transition.id + '\' from state \'' + this.state + '\'.')	
 						}
 					}
+					return applied
 				}.bind(target, transitionsArray[i])
 			}
-
-			return applied
 		}
 
 		function _registerStates(states) {
