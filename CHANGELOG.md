@@ -1,4 +1,4 @@
-# 0.0.2 (13-07-2014)
+# 0.0.4 (13-07-2014)
 
 * Improved documentation (see README)
 * Add support for same transition applied from different states
