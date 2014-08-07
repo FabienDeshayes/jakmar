@@ -94,7 +94,7 @@ machineDefinition.states('opened', 'closed')
 
 ### machineDefinition.transition(transitionId, fromStateId, toStateId)
 
-Register a new transition with ```transitionId``` as an identifier to the ```machineDefinition```. The transition will change the move the stateful object from the state defined by ```fromStateId``` to the state defined by ```toStateId```. Returns ```this``` for chained calls.
+Register a new transition with ```transitionId``` as an identifier to the ```machineDefinition```. The transition will change the stateful object from the state defined by ```fromStateId``` to the state defined by ```toStateId```. Returns ```this``` for chained calls.
 
 ```javascript
 machineDefinition.transition('open', 'opened', 'closed')
