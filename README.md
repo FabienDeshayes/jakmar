@@ -7,6 +7,7 @@ Jakmar is a finite state machine for Javascript.
 If you want to see examples of Jakmar, please see the following:
 
 * [Game of life](https://github.com/FabienDeshayes/react-jakmar-example) with Jakmar and React
+* [Workflow visualization](https://github.com/FabienDeshayes/vue-jakmar-example) with Jakmar and Vue (and d3)
 
 # Usage
 
@@ -200,7 +201,6 @@ statefulObject.open() // throws an Error
 
 * Retrieve machine definition by id
 * Add a minified version
-* Provide a simple example with Vue
 
 ## Status
 
