@@ -35,8 +35,8 @@ And some transitions:
 
 ```javascript
 definition
-	.transition('open', 'opened', 'closed') // open transition, from the opened state to the closed state
-	.transition('close', 'closed', 'opened') // close: closed => opened
+	.transition('open', 'closed', 'opened') // open transition, from the closed state to the opened state
+	.transition('close', 'opened', 'closed') // close: opened => closed
 ```
 
 Then just build the definition to get your stateful instance:
@@ -97,7 +97,7 @@ machineDefinition.states('opened', 'closed')
 Register a new transition with ```transitionId``` as an identifier to the ```machineDefinition```. The transition will change the stateful object from the state defined by ```fromStateId``` to the state defined by ```toStateId```. Returns ```this``` for chained calls.
 
 ```javascript
-machineDefinition.transition('open', 'opened', 'closed')
+machineDefinition.transition('open', 'closed', 'opened')
 ```
 
 ### machineDefinition.build(initialState, target)
