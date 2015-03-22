@@ -247,5 +247,21 @@ describe('Jakmar', function() {
 
 			expect(function() { machineDefinition.build('online') }).not.to.throw(Error)
 		})
+
+		it('should throw an Error if trying to register a transition involving an unknown state', function() {
+			var machineDefinition = jakmar
+				.create()
+				.state('online')
+
+			expect(function() { machineDefinition.transition('toggle', 'online', 'offline') }).to.throw(Error)
+		})
+
+		it('should not throw an Error if trying to register a transition involving an unknown state with the errorOnUnknownState option false', function() {
+			var machineDefinition = jakmar
+				.create( { errorOnUnknownState: false })
+				.state('online')
+
+			expect(function() { machineDefinition.transition('toggle', 'online', 'offline') }).not.to.throw(Error)
+		})
 	})
 })

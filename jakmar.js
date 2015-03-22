@@ -41,7 +41,6 @@
 			, transitionsArray = []
 			, enterFn = function noop() {}
 			, exitFn = function noop() {}
-			, errorOnInvalidTransition = options.errorOnInvalidTransition
 		
 		this.id = id
 
@@ -107,6 +106,10 @@
 		this.transition = function(transitionId, fromStateId, toStateId) {
 			var transition
 
+			if (errorOnUnknownState && (!states.hasOwnProperty(fromStateId) || !states.hasOwnProperty(toStateId))) {
+				throw new Error()
+			}
+
 			if (transitions.hasOwnProperty(transitionId)) {
 				transition = transitions[transitionId]
 			} else {
@@ -161,7 +164,8 @@
 	var jakmar = {}
 
 	var _machineDefOptionsDefaults = {
-		errorOnInvalidTransition: true
+		errorOnInvalidTransition: true,
+		errorOnUnknownState: true
 	}
 
 	function _create(id, options) {
