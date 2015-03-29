@@ -41,6 +41,8 @@
 			, transitionsArray = []
 			, enterFn = function noop() {}
 			, exitFn = function noop() {}
+			, errorOnInvalidTransition = options.errorOnInvalidTransition
+			, errorOnUnknownState = options.errorOnUnknownState
 		
 		this.id = id
 
@@ -168,11 +170,24 @@
 		errorOnUnknownState: true
 	}
 
+	var machineDefinitions = {}
+
 	function _create(id, options) {
-		return new MachineDefinition(id, options || _machineDefOptionsDefaults)
+		machineDefinitions[id] = new MachineDefinition(id, options || _machineDefOptionsDefaults)
+		return machineDefinitions[id]
+	}
+
+	function _get(id) {
+		return machineDefinitions[id]
+	}
+
+	function _reset() {
+		machineDefinitions = {}
 	}
 
 	jakmar.create = _create
+	jakmar.get = _get
+	jakmar.reset = _reset
 
 	return jakmar
 

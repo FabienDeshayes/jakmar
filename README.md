@@ -4,7 +4,7 @@ Jakmar is a finite state machine for Javascript.
 
 # Example
 
-If you want to see examples of Jakmar, please see the following:
+If you want to see Jakmar in action, please consult the following:
 
 * [Game of life](https://github.com/FabienDeshayes/react-jakmar-example) with Jakmar and React
 * [Workflow visualization](https://github.com/FabienDeshayes/vue-jakmar-example) with Jakmar and Vue (and d3)
@@ -16,6 +16,7 @@ For Node.js, just include the library:
 ```javascript
 var jakmar = require('jakmar')
 ```
+
 ## Stateful objects creation
 
 First, build a MachineDefinition:
@@ -28,7 +29,7 @@ Once it's created, start by adding states:
 
 ```javascript
 definition
-	.state('opened') // a state is justdefined by a string
+	.state('opened') // a state is just defined by a string
 	.state('closed')
 ```
 
@@ -36,8 +37,8 @@ And some transitions:
 
 ```javascript
 definition
-	.transition('open', 'closed', 'opened') // open transition, from the closed state to the opened state
-	.transition('close', 'opened', 'closed') // close: opened => closed
+	.transition('open', 'closed', 'opened') // 'open' transition, from the 'closed' state to the 'opened' state
+	.transition('close', 'opened', 'closed') // 'close' transition, from the 'opened' state to the 'closed' state
 ```
 
 Then just build the definition to get your stateful instance:
@@ -64,9 +65,26 @@ console.log(stateful.state) // opened
 
 The ```create``` method creates and returns a new instance of a ```MachineDefinition``` with ```id``` as an identifier. The following ```options``` are valid (and all are optional):
 * ```errorOnInvalidTransition```: will throw an Error if a transition tries to be applied but the stateful object is not in an expected state. Default is ```true```.
+* ```errorOnUnknownState```: will throw an Error if a transition tries to be applied to or from a state that does not exist. Default is ```true```.
 
 ```javascript
-machineDefinition = jakmar.create('fooDef', {errorOnInvalidTransition: false})
+machineDefinition = jakmar.create('fooDef', {errorOnInvalidTransition: false, errorOnUnknownState: false})
+```
+
+### jakmar.get(id)
+
+The ```get``` method will return the ```MachineDefinition``` with ```id``` as an identifier. If there is no machine definition found, returns ```undefined```.
+
+```javascript
+machineDefinition = jakmar.get('fooDef')
+```
+
+### jakmar.reset()
+
+The ```reset``` method will remove all stored ```MachineDefinition```s from Jakmar.
+
+```javascript
+jakmar.reset()
 ```
 
 ### machineDefinition.state(stateId)
@@ -199,7 +217,6 @@ statefulObject.open() // throws an Error
 
 ## TODO
 
-* Retrieve machine definition by id
 * Add a minified version
 
 ## Status
